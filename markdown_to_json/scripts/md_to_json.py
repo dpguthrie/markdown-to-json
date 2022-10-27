@@ -16,6 +16,8 @@ Options:
   -o <file>     Save output to a file instead of stdout
   -i <val>      Indent nested JSON by this amount. Use a negative number for
                 most compact possible JSON. the [default: 2]
+  -l <val>      Highest heading level that exists within the markdown file
+                [default: 1]
 """
 
 from __future__ import print_function, absolute_import, unicode_literals
@@ -64,12 +66,12 @@ def get_markdown_ast(markdown_file):
         f.close()
 
 
-def jsonify_markdown(markdown_file, outfile, indent):
+def jsonify_markdown(markdown_file, outfile, indent, heading_level):
     nester = CMarkASTNester()
     renderer = Renderer()
     with writable_io_or_stdout(outfile) as f:
         ast = get_markdown_ast(markdown_file)
-        nested = nester.nest(ast)
+        nested = nester.nest(ast, heading_level)
         rendered = renderer.stringify_dict(nested)
         json.dump(rendered, f, indent=indent)
         f.write("\n")
@@ -88,10 +90,13 @@ def main(args=[]):
         sys.exit(1)
     if indent < 0:
         indent = None
+    
     return jsonify_markdown(
         pargs['<markdown_file>'],
         pargs.get('-o'),
-        indent)
+        indent,
+        pargs.get('-l', 1),
+    )
 
 
 if __name__ == '__main__':

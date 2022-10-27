@@ -55,7 +55,7 @@ class CMarkASTNester(object):
     def __init__(self):
         super(CMarkASTNester, self).__init__()
 
-    def nest(self, ast, highest_heading_level: int = 1):
+    def nest(self, ast, highest_heading_level):
         return self._dictify_blocks(ast.children, highest_heading_level)
 
     def _dictify_blocks(self, blocks, heading_level):

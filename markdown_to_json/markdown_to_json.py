@@ -52,12 +52,11 @@ strings, lists, or OrderedDicts as values.
 
 
 class CMarkASTNester(object):
-    def __init__(self, highest_heading_level: int = 1):
-        self.highest_heading_level = highest_heading_level
+    def __init__(self):
         super(CMarkASTNester, self).__init__()
 
-    def nest(self, ast):
-        return self._dictify_blocks(ast.children, self.highest_heading_level)
+    def nest(self, ast, highest_heading_level: int = 1):
+        return self._dictify_blocks(ast.children, highest_heading_level)
 
     def _dictify_blocks(self, blocks, heading_level):
         def matches_heading(block):
